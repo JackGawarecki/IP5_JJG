@@ -1,0 +1,31 @@
+#Import the dataset
+dataset=read.csv("Self Awareness Dataset.csv")
+#Drop the completely empty last 5 rows (not supposed to be there)
+dataset<-dataset[-c(69,70,71,72,73), ]
+dataset <- dataset[ -c(1,9:12) ]
+#Display the count of Null values per column
+colSums(is.na(dataset))
+
+
+
+install.packages('caTools')
+library('caTools')
+set.seed(123)
+split=sample.split(dataset$End.of.the.day.Feeling..0.to.10.,SplitRatio = .8)
+training_set=subset(dataset,split==TRUE)
+testing_set=subset(dataset,split==FALSE)
+# Fitting Multiple Linear Regression to the Training set
+regressor<-lm(formula = End.of.the.day.Feeling..0.to.10.~.,data=training_set)
+summary(regressor)
+
+# Predicting the Validation set results
+new<- data.frame(Date='17-Mar',Day='Thursday', Sleep.Hour=8, Exercise.Hour=2, Study.Hour=1, StudyDS.Hour=1, Work.Hour=4)
+predict(regressor,new)
+new1<-data.frame(Date='18-Mar',Day='Friday', Sleep.Hour=7, Exercise.Hour=1, Study.Hour=1, StudyDS.Hour=0, Work.Hour=1)
+predict(regressor,new1)
+new2<-data.frame(Date='19-Mar',Day='Saturday', Sleep.Hour=8, Exercise.Hour=2, Study.Hour=0, StudyDS.Hour=0, Work.Hour=2)
+predict(regressor,new2)
+new3<-data.frame(Date='20-Mar',Day='Sunday', Sleep.Hour=8, Exercise.Hour=2, Study.Hour=0, StudyDS.Hour=0, Work.Hour=3)
+predict(regressor,new3)
+new4<-data.frame(Date='21-Mar',Day='Monday', Sleep.Hour=9, Exercise.Hour=3, Study.Hour=2, StudyDS.Hour=1, Work.Hour=3)
+predict(regressor,new4)
